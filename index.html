@@ -3,6 +3,8 @@ title: Home
 layout: default
 ---
 
-    <h2>bla bla first post</h2>
-    <p>test2</p>
+<h2>posts</h2>
+{% for post in site.posts %}
+    <a href={{ post.url }}><h3>{{ post.title }}</h3></a>
+{% endfor %}
 
