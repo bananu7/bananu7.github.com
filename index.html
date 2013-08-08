@@ -2,11 +2,18 @@
 title: Home
 layout: default
 ---
- <section>
-  <h1>Yeah it's me</h1>
-  I know, it's amazing. Don't get scared just yet.
-  <h2>Posts</h2>
-  {% for post in site.posts %}
-      <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
-  {% endfor %}
-</section>
+
+<h2>Yeah it's me</h2>
+I hopefully will convert this mess into something that might actually
+resemble a blog. After ditching Wordpress and a few other "sites" I
+won't ever mention, Jekyll looks like a reasonable way to do that.
+
+<h2>Current Posts so far</h2>
+There aren't many so far, and I figure it's better if it's available
+in lousy form than not available at all.
+
+<ul>
+{% for post in site.posts %}
+    <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+{% endfor %}
+</ul>
