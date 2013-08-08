@@ -1,7 +1,9 @@
 ---
-layout: default
+layout: post
 title: Why physics engines suck for game development?
 ---
+
+##Huh?
 
 At first, don't get me wrong. I love physics engines. They are best thing to happen to
 game development since Twitter and flushed toilets. However, there are some points to them

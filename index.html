@@ -2,9 +2,11 @@
 title: Home
 layout: default
 ---
-
-<h2>posts</h2>
-{% for post in site.posts %}
-    <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
-{% endfor %}
-
+ <section>
+  <h1>Yeah it's me</h1>
+  I know, it's amazing. Don't get scared just yet.
+  <h2>Posts</h2>
+  {% for post in site.posts %}
+      <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
+  {% endfor %}
+</section>
