@@ -200,6 +200,8 @@ header {
   left: 0;
   right: 0;
   width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
   text-align: center;
   background: url(../images/background.png) #4276b6;
   -moz-box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.75);
