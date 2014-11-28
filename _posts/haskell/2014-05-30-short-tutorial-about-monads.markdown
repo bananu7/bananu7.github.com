@@ -1,3 +1,9 @@
+---
+layout: post
+title: A short tutorial about monads
+categories: haskell
+---
+
 # This is going to be a short tutorial about monads.
 
 ## Context in imperative programming
