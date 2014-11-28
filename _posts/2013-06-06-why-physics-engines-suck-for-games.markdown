@@ -39,7 +39,7 @@ help the developer is actually taking more time to make it work properly. Which 
 
 That's a thing that might sound odd at first (especially when compared to data-driven environment behavior). The point is, the more sophisticated and realisitic your physics software is, the more you will have to feed to it, to make it work satisfactory. It's like a large green monster behind your workstation, demanding constant attention from you. And so, you can't just put a tree right there, because it has too rough collision model, and is standing in the way of your character. You also shouldn't expect the table to flip properly before you take your time to calculate its angular inertia along the Z-axis.
 
-###And the results aren't neither realistic...
+###And the results are neither realistic...
 
 Supposing you somehow managed to estimate density and thus, weight of every object of your game, you launch it and... zonk! Nothing happens as expected, heavy objects bounce around and light ones hardly move. You go back go tweak the little screws, adding 0.001 to your restitution factor everywhere, and takes exorbitant amount of time to make the world believable, even if it's just cartoonish game. And then you add a weapon that shoots projectiles with a speed that exceeds your calculated maximum for just a tiny bit. Guess what? Yeah, you're screwed.
 
@@ -56,7 +56,7 @@ Typical physics engine consists of those parts:
  * Narrowphase collision detection (based on actual vertices of the collision model)
  * The (Collision) Solver (pushes objects apart if they collide)
 
-Most of the games really require only 2. The solver can be simplified from around 15k LOC with integrals to really simple, high school maths. And given you code it especially for the game, it usually requires only minimal tweaking. There are just fewer parameters needed and thus fewer of them have to be set up properly.
+Most of the games really require only 2. The solver can be simplified from around 15k LOC with integrals to really simple, high school maths. And given you code it specifically for the game, it usually requires only minimal tweaking. There are just fewer parameters needed and thus fewer of them have to be set up properly.
 
 ##To sum it all up
 
