@@ -137,6 +137,7 @@ code {
   -ms-border-radius: 2px;
   -khtml-border-radius: 2px;
   border-radius: 2px;
+  white-space: nowrap;
 }
 
 pre {
@@ -155,6 +156,7 @@ pre {
 pre code {
   margin: 0px;
   padding: 0px;
+  white-space: pre;
 }
 
 table {
