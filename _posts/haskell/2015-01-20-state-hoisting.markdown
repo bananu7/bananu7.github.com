@@ -69,7 +69,7 @@ Now we can use it!
 
 {% highlight haskell %}
 myFunction = do
-    a <- gets str
+    a <- fmap length $ gets str -- get the length of the string
     b <- hoistVal $ super 5  
     return $ a + b
 {% endhighlight %}
