@@ -53,7 +53,8 @@ talk about possible improvements to it. Here's a function you need:
 hoistVal :: State Int a -> State MyData a
 {% endhighlight %}
 
-(Make sure you understand the signature, and why it works that way).
+Make sure you understand the signature, and why we need it to look that way. We have a computation in some
+*narrow* state (`Int`) and we want to hoist it to a computation in a broader state (`MyData`).
 
 {% highlight haskell %}
 hoistVal fn = do
@@ -77,8 +78,14 @@ myFunction = do
 
 Okay, I promised you an explanation, so here it is. We can't use the `super` function directly, because it expects a context
 that's precisely of type `Int`. A record won't do. A pair of `Int`s won't do. You have to tell it exactly on what part of your state
-it's supposed to operate on. And that's what `hoist` is doing; it takes a "state narrower" (`acc`, for which we substitute `val`), and
-an actual combinator (`fn` -> `super 5`). Note that we had to apply `super` with `5` to make it compatible - this should be obvious for you.
+it's supposed to operate on. And that's what `hoistVal` is doing; it takes a combinator (`fn`) and makes it "think" that it's actually
+operating in a narrower state.
+
+Note that we had to apply `super` with `5` to make it compatible; its type is `Int -> State Int Int`, but we assume that we're going to
+hoist a "ready-to-use" computation, typed `State ...`.
+
+So, as you can see what `hoist` is doing is mimicking another context!. We can do it because *we already have required infrastructure in place*;
+we just have to tell the compiler how to connect it all together.
 
 ## So, that was it?
 
