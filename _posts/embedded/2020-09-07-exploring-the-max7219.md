@@ -23,24 +23,24 @@ This meant that I won't be able to use the decoding functionality, and think abo
 A function realizing that could look like this:
 
 {% highlight cpp %}
-  void writeDigit(byte dig) {
+void writeDigit(byte dig) {
     const uint8_t font[] = {
-      0b01111110,
-      0b00110000,
-      0b01101101,
-      0b01111001,
-      0b00110011,
-      0b01011011,
-      0b01011111,
-      0b01110000,
-      0b01111111,
-      0b01111011
+        0b01111110,
+        0b00110000,
+        0b01101101,
+        0b01111001,
+        0b00110011,
+        0b01011011,
+        0b01011111,
+        0b01110000,
+        0b01111111,
+        0b01111011
     };
   
     for (int s = 0; s < 8; s++) {
-      auto f = font[dig];
-      auto b = f & (1 << (7-s));
-      SpiWriteTwoBytes(s+1, b ? 0b00000001 : 0x00);
+        auto f = font[dig];
+        auto b = f & (1 << (7-s));
+        SpiWriteTwoBytes(s+1, b ? 0b00000001 : 0x00);
     }
 }
 {% endhighlight %}
