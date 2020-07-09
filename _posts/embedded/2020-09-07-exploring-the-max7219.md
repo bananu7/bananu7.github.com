@@ -2,7 +2,7 @@
 
 I've discovered this IC completely by accident. A few years back, when working on my Kerbal Space Program visualizer, I bought a few 8x7-segment displays. They work much better than cheap HD47780s when the numbers refresh very quickly, and have distinct space machinery look that I dig. The other thing was how easy it was to drive them. They exposed just 5 pins - power and standard read-only (MOSI) SPI. On the other side of the board, the MOSI pin was "replicated" allowing daisy-chaining the units.
 
-![Multiple 7-segment displays on one board](./7219_multi.jpg)
+![Multiple 7-segment displays on one board](7219_multi.jpg)
 
 It turns out it was all possible to the small chip soldered on the other side - Maxim Integrated MAX7219CNG. I've been familiar with the brand, as they make the craziest stuff I've seen so far; they basically turn 3-month hobby project boards into ICs; so by their standards, the 7219 is actually very simple.
 
@@ -47,7 +47,7 @@ void writeDigit(byte dig) {
 
 And voila!
 
-![Big 7-segment display driven by 7219](./7219_big.jpg)
+![Big 7-segment display driven by 7219](7219_big.jpg)
 
 Here's where the beautiful simplicity of the 7219 realizes. Since it was meant to drive LED matrices, it really doesn't care. In fact, its use is not limited to matrices or 7-segments. As long as you have up to 64-bit LEDs which you can wire in banks of 8, you can control them with it just fine (for example, the datasheet talks about bar graph displays). You could e.g. make a 32-step stereo VU meter, or really just drive 64 LEDs in a completely arbitrary way.
 
