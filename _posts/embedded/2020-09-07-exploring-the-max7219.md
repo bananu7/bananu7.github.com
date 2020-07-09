@@ -22,8 +22,8 @@ This meant that I won't be able to use the decoding functionality, and think abo
 
 A function realizing that could look like this:
 
-```
-void writeDigit(byte dig) {
+{% highlight cpp %}
+  void writeDigit(byte dig) {
     const uint8_t font[] = {
       0b01111110,
       0b00110000,
@@ -43,7 +43,7 @@ void writeDigit(byte dig) {
       SpiWriteTwoBytes(s+1, b ? 0b00000001 : 0x00);
     }
 }
-```
+{% endhighlight %}
 
 And voila!
 
