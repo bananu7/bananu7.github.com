@@ -60,6 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 
 p, ul, ol, table, pre, dl {
   margin: 0 0 20px;
+  font-size: 17px;
 }
 
 h1, h2, h3 {
@@ -107,7 +108,7 @@ strong {
 }
 
 .wrapper {
-  width: 650px;
+  width: 850px;
   margin: 0 auto;
   position: relative;
 }
@@ -343,7 +344,7 @@ header p {
 }
 
 section {
-  width: 590px;
+  width: 790px;
   padding: 30px 30px 50px 30px;
   margin: 20px 0;
   position: relative;
@@ -370,7 +371,7 @@ nav {
   position: fixed;
   top: 220px;
   left: 50%;
-  margin-left: -580px;
+  margin-left: -780px;
   text-align: right;
 }
 nav ul {
@@ -404,7 +405,7 @@ footer {
   width: 180px;
   position: fixed;
   left: 50%;
-  margin-left: -530px;
+  margin-left: -730px;
   bottom: 20px;
   text-align: right;
   line-height: 16px;
