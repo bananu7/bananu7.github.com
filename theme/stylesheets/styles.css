@@ -371,7 +371,7 @@ nav {
   position: fixed;
   top: 220px;
   left: 50%;
-  margin-left: -780px;
+  margin-left: -680px;
   text-align: right;
 }
 nav ul {
@@ -405,7 +405,7 @@ footer {
   width: 180px;
   position: fixed;
   left: 50%;
-  margin-left: -730px;
+  margin-left: -630px;
   bottom: 20px;
   text-align: right;
   line-height: 16px;
