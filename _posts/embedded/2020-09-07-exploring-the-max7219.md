@@ -1,3 +1,8 @@
+---
+title: Exploring The Max7219
+date: 2020-09-07 00:00:00 Z
+---
+
 # Exploring the MAX7219
 
 I've discovered this IC completely by accident. A few years back, when working on my Kerbal Space Program visualizer, I bought a few 8x7-segment displays. They work much better than cheap HD47780s when the numbers refresh very quickly, and have distinct space machinery look that I dig. The other thing was how easy it was to drive them. They exposed just 5 pins - power and standard read-only (MOSI) SPI. On the other side of the board, the MOSI pin was "replicated" allowing daisy-chaining the units.

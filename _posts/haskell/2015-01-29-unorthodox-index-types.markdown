@@ -1,6 +1,7 @@
 ---
-layout: post
 title: Unorthodox index types for spatial containers
+date: 2015-01-29 00:00:00 Z
+layout: post
 ---
 
 # Unorthodox index types for spatial containers

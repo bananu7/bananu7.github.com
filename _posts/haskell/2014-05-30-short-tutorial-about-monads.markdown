@@ -1,7 +1,9 @@
 ---
-layout: post
 title: A short tutorial about monads
-categories: haskell
+date: 2014-05-30 00:00:00 Z
+categories:
+- haskell
+layout: post
 ---
 
 # This is going to be a short tutorial about monads.
