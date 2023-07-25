@@ -2,6 +2,8 @@
 title: Unorthodox index types for spatial containers
 date: 2015-01-29 00:00:00 Z
 layout: post
+categories:
+- haskell
 ---
 
 # Unorthodox index types for spatial containers

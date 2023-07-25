@@ -3,17 +3,17 @@ title: Home
 layout: default
 ---
 
-<h2>Yeah it's me</h2>
-I hopefully will convert this mess into something that might actually
-resemble a blog. After ditching Wordpress and a few other "sites" I
-won't ever mention, Jekyll looks like a reasonable way to do that.
+<h1>Bartek's blog</h1>
 
-<h2>Current Posts so far</h2>
-There aren't many so far, and I figure it's better if it's available
-in lousy form than not available at all.
+<span?>Browse posts by categories:</span>
 
-<ul>
-{% for post in site.posts %}
-    <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+{% for category in site.categories %}
+<p>
+    <h2>{{ category | first }}</h2>
+    <ul>
+    {% for post in category.last %}
+      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+    </ul>
+</p>
 {% endfor %}
-</ul>

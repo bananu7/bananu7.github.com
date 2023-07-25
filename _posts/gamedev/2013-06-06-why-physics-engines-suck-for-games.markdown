@@ -2,6 +2,8 @@
 title: Why physics engines suck for game development?
 date: 2013-06-06 00:00:00 Z
 layout: post
+categories:
+- gamedev
 ---
 
 ##Huh?

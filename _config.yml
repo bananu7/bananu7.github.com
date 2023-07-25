@@ -10,5 +10,5 @@ collections:
     output: true
 safe: true
 lsi: false
-pygments: true
+highlighter: rogue
 markdown: rdiscount
