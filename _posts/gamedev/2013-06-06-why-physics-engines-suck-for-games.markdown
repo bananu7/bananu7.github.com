@@ -6,7 +6,7 @@ categories:
 - gamedev
 ---
 
-##Huh?
+## Huh?
 
 At first, don't get me wrong. I love physics engines. They are best thing to happen to
 game development since Twitter and flushed toilets. However, there are some points to them
@@ -20,7 +20,7 @@ you want to use, graphics engine, networking library, physics...
 And there lies the problem. In the era of bouncing objects everywhere, creating a game without
 physics engine seems really... inappropriate? Let's look first at what they contribute to the game:
 
-##Benefits
+## Benefits
 
  * The objects behave more realistically - you can push them, and they will move, start to 
    roll and eventually hit other objects and interact with them in some way.
@@ -38,15 +38,15 @@ code or library that you have to maintain alongside your code. It's especially v
 projects, dominated by the large graphics and physics engine. The technology that was designed to
 help the developer is actually taking more time to make it work properly. Which takes us to another point,
 
-##Physics engines complicate things
+## Physics engines complicate things
 
 That's a thing that might sound odd at first (especially when compared to data-driven environment behavior). The point is, the more sophisticated and realisitic your physics software is, the more you will have to feed to it, to make it work satisfactory. It's like a large green monster behind your workstation, demanding constant attention from you. And so, you can't just put a tree right there, because it has too rough collision model, and is standing in the way of your character. You also shouldn't expect the table to flip properly before you take your time to calculate its angular inertia along the Z-axis.
 
-###And the results are neither realistic...
+### And the results are neither realistic...
 
 Supposing you somehow managed to estimate density and thus, weight of every object of your game, you launch it and... zonk! Nothing happens as expected, heavy objects bounce around and light ones hardly move. You go back go tweak the little screws, adding 0.001 to your restitution factor everywhere, and takes exorbitant amount of time to make the world believable, even if it's just cartoonish game. And then you add a weapon that shoots projectiles with a speed that exceeds your calculated maximum for just a tiny bit. Guess what? Yeah, you're screwed.
 
-###...nor worth it.
+### ...nor worth it.
 
 The point is, your game was meant to be arcade shootout or platformer from the beginning. Adding falling cubes sounded like fun idea, but they weren't really the heart of your project. And to avoid writing a few lines of code that would make your character stand on the platform and not fall through, you spent three days making the capsule shape for your character load properly.
 
@@ -61,6 +61,6 @@ Typical physics engine consists of those parts:
 
 Most of the games really require only 2. The solver can be simplified from around 15k LOC with integrals to really simple, high school maths. And given you code it specifically for the game, it usually requires only minimal tweaking. There are just fewer parameters needed and thus fewer of them have to be set up properly.
 
-##To sum it all up
+## To sum it all up
 
 Ask yourself how much your game will gain and if the gains are concentrated around the essence and the main idea of it. 

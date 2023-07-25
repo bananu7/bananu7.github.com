@@ -12,8 +12,10 @@ layout: post
 
 I'd like to start by looking at a simple computer program:
 
-    doThingA();
-    doThingB();
+```c
+doThingA();
+doThingB();
+```
 
 You might recognize that it's written in your favorite programming language. It represents the series of operations you instruct your computer to perform. However, it's implied that if the above program was to work, it needs something else. It needs *context*.
 
@@ -23,14 +25,16 @@ There are three most popular methods of adding context to programs.
 
 First would be global variables.
 
-    int a;
-    doThingA() { a = 0; }
-    doThingB() { a = a - 1; }
-    
-    main() {
-        doThingA();
-        doThingB();
-    }
+```c
+int a;
+doThingA() { a = 0; }
+doThingB() { a = a - 1; }
+
+main() {
+    doThingA();
+    doThingB();
+}
+```
 
 We can now see what the methods are doing. Every time `doThingA` appears in our requested sequence of operations, the global counter `a` will be reset to 0. Easy enough.
 
@@ -40,19 +44,21 @@ Global variables exist mostly because first “computers” without that thing c
 
 And so, the second way appears; Object-Oriented Programming.
 
-    class C {
-        int a;
-    
-        doThingA() { a = 0; }
-        doThingB() { a = a - 1; }
-    }
-    
-    main() {
-        C c = new C();
-        c.doThingA();
-        c.doThingB();
-    }
-    
+```cpp
+class C {
+    int a;
+
+    doThingA() { a = 0; }
+    doThingB() { a = a - 1; }
+}
+
+main() {
+    C c = new C();
+    c.doThingA();
+    c.doThingB();
+}
+```
+
 The bodies of the functions stay the same (some languages with weird or or simply badly designed scoping rules require explicit `this` annotations), but we isolate the `a` context. We can now create as many of those as we want (each time instantiating the `C` class). What’s important to note is that we now precede each instruction with the name of the instance that denotes the particular context that has to be used with that particular call.
 
 This has actually proven to be a much better idea than global variables. It was easier to test, and since functions could no longer modify each and every part of the program, the call for real design appeared. Over the last years this has evolved tremendously, giving class-based designs (prototype-based designs are similar enough with regard to the topic that it’s not worth mentioning them separately here) much more power: interfaces and polymorphism, generics, reflection, all of those and many more made OOP the dominant paradigm of programming today.
@@ -61,17 +67,19 @@ This has actually proven to be a much better idea than global variables. It was 
 
 However, I’ve mentioned a third way. It’s actually closer to the one that we’re going to get to, eventually. Before the rise of Java and C++, we got an intermediate way to supply context to our operations. Languages like C and Pascal offered the “structural” way of programming.
 
-    struct S {
-        int a;
-    }
-    doThingA(S s) { s.a = 0; }
-    doThingB(S s) { s.a = s.a - 1; }
-    
-    main () {
-        S s = S();
-        doThingA(s);
-        doThingB(s);
-    }
+```c
+struct S {
+    int a;
+}
+doThingA(S s) { s.a = 0; }
+doThingB(S s) { s.a = s.a - 1; }
+
+main () {
+    S s = S();
+    doThingA(s);
+    doThingB(s);
+}
+```
 
 The main observable (in such a simple scenario) difference between #2 and #3 is that the functions reside outside the data definition, and require some explicitness when operating on the context inside of them. Otherwise, looking at the part of the program that actually does something, it’s extremely similar. We pass the context to the functions as a parameter, not precede the calls with it, but otherwise it’s quite similar.
 
@@ -95,15 +103,17 @@ For those who know what they are, feel free to skip this paragraph. (insert shor
 
 So, Monads are a way of expressing context, but keeping the aforementioned properties. However, at the same time we want to keep the code short and readable. Let’s take a look at yet another example of the same functionality, but now expressed with monads.
 
-    doThingA = put 0
-    doThingB = do
-        a <- get
-        put (a-1)
-    
-    main = do 
-        let a = 0
-        let a' = evalState (do doThingA; doThingB) a
-        return ()
+```haskell
+doThingA = put 0
+doThingB = do
+    a <- get
+    put (a-1)
+
+main = do 
+    let a = 0
+    let a' = evalState (do doThingA; doThingB) a
+    return ()
+```
 
 
 It might seem a little more complicated, because it’s actually a valid Haskell program, but otherwise, if you try a bit, you can see how it’s similar to the previous ones. The most important difference is that the value of `a` stays the same! We take `a` as the initialized context, do some operations on it, and produce a modified copy of it. That way we are able to keep the computation functionally pure. We also provide all the dependences in a transparent way. The only downside is having to write `evalState` explicitely, but as we will see later, this isn’t actually that bad, because we are being explicit about *the way we are going to work with the context*. We also don’t have to repeat the context name explicitely, as in approach #2.
@@ -114,30 +124,34 @@ That out of the way, let’s see how we might express a larger set of common ope
 
 First the OOP way:
 
-    class TestClass {
-        int x;
-        const int c = 10;
-        string log;
-    
-        test() { x = 5 + c; log = log + “Set x to sum of constant c and 5”; print(log); }
-    }
+```cpp
+class TestClass {
+    int x;
+    const int c = 10;
+    string log;
 
-    main() {
-        TestClass instance = new TestClass();
-        instance.test();
-    }
+    test() { x = 5 + c; log = log + "Set x to sum of constant c and 5"; print(log); }
+}
+
+main() {
+    TestClass instance = new TestClass();
+    instance.test();
+}
+```
 
 and now the monadic way:
 
-    test = do 
-        c <- ask
-        put (5 + c)
-        tell "Set the state to sum of constant c and 5"
-        
-    main = do 
-        let c = 10
-        let (s', w') = execRWS test c 0
-        print w'
+```haskell
+test = do 
+    c <- ask
+    put (5 + c)
+    tell "Set the state to sum of constant c and 5"
+    
+main = do 
+    let c = 10
+    let (s', w') = execRWS test c 0
+    print w'
+```
 
 I hope you’re grasping it a bit more. We are making the “execution in context” explicit again by saying `execRWS test c 0`, that is, “execute the operation `test` with context of type RWS, given initial state of constant set to `c`, and initial state of variable set to 0”.
 
@@ -157,10 +171,12 @@ But the use of context restriction doesn’t end here. We can use those contexts
 
 Monads are even more powerful. The contexts control not only what is available to the code that works using them; they can *alter its behavior*. This can be extremely handy when, for example, you want to stop execution of the program, if one part of it fails:
 
-    test = do 
-        a <- obtainValue
-        b <- obtainValueBasedOn a
-        return b
+```haskell
+test = do 
+    a <- obtainValue
+    b <- obtainValueBasedOn a
+    return b
+```
 
 If this was in `Maybe` Monad, if any of the operations that obtain values failed, resulting in `Nothing`, the whole function would automatically result in `Nothing`. The context, being responsible for chaining operations, is able to “look inside” their returned values and change behaviour according to them. There are some laws that dictate what operations are possible, to keep the program’s behavior reasonable, but nevertheless it still offers a lot of possibilities.
 

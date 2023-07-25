@@ -3,6 +3,7 @@ title: My first guitar build
 date: 2023-02-18 23:40:00 +1
 categories:
 - woodworking
+layout: post
 ---
 
 # My first guitar build

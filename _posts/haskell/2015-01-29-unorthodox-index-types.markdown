@@ -15,12 +15,16 @@ from the common ones. We'll explore the possibilities this change brings to the 
 
 The most basic and ubiquituous data structure in the computing world is most certainly an array:
 
-    int arr[5];
+```c
+int arr[5];
+```
 
 It's available in every programming language, and keeps elements in sequential order. What's
 hidden in this definition is the access to it:
 
-    int value = arr[ix];
+```c
+int value = arr[ix];
+```
 
 In the C programming language, we index arrays with unsigned integers starting at 0 and ending
 at array size - 1. Thus, `ix` could simply be of type `unsigned` (`unsigned` and `unsigned int` are
@@ -36,7 +40,9 @@ Many beginner game programmers thus choose this straightforward data structure t
 their game states, most notably boards. They exploit the ability that arrays can actually contain
 arrays inside, and so we get:
 
-    int board[size][size];
+```c
+int board[size][size];
+```
 
 Bam! `board[x][y]` gives us access to one particular field. Great, isn't it?
 
@@ -44,67 +50,81 @@ Actually, it's pretty terrible.
 
 Let's write a simple game.
 
-    enum Field {
-        Empty,
-        Player,
-        Monster,
-        Rock
-    };
+```cpp
+enum Field {
+    Empty,
+    Player,
+    Monster,
+    Rock
+};
 
-    Entity board [size][size];
+Entity board [size][size];
 
-    int playerX, playerY;
+int playerX, playerY;
 
-    void movePlayer(int keyPressed) {
-        switch (keyPressed) {
-            case LEFT_ARROW:
-                playerX -= 1; break;
-            // ...
-        }
+void movePlayer(int keyPressed) {
+    switch (keyPressed) {
+        case LEFT_ARROW:
+            playerX -= 1; break;
+        // ...
     }
+}
+```
 
 Okey, so what's wrong with that? Well, for one `playerX` and `playerY` look like something we could
 refactor into a "point" (or perhaps "position" class):
 
-    struct Point {
-        int x, y;
-    }
-    Point playerPosition;
+```cpp
+struct Point {
+    int x, y;
+}
+Point playerPosition;
+```
 
 Instead of writing `playerX` we now write `playerPosition.x`, which is arguably much cooler. We can also
 make our movement function pure:
 
-    Point getMovement(int keyPressed) {
-        switch (keyPressed) {
-            case LEFT_ARROW:
-                return Point (-1, 0);
-            // ...
-        }
+```cpp
+Point getMovement(int keyPressed) {
+    switch (keyPressed) {
+        case LEFT_ARROW:
+            return Point (-1, 0);
+        // ...
     }
+}
+```
 
 Moving the player is now a bit more explicit:
 
-    playerPosition.add(getMovement(key));
+```cpp
+playerPosition.add(getMovement(key));
+```
 
 And we can reuse this function for other things.
 So far, so good. However, one problem remains: how do we place a player onto the board?
 
-    placeOnTheBoard(Unit u) {
-        // act on u polymorphically
-        board[u.position.x][u.position.y] = u.type;
-    }
+```cpp
+placeOnTheBoard(Unit u) {
+    // act on u polymorphically
+    board[u.position.x][u.position.y] = u.type;
+}
+```
 
 Most of the people will stop there, thinking it's fine. And, for most of the time, it will.
 But it's not going to be enough for us.
 
 Point being, I always hated people writing code like so:
 
-    pX += dX;
-    pY += dY;
+```cpp
+pX += dX;
+pY += dY;
+```
 
 Every time I saw something like that I immediately had the proper solution in mind:
 
-    p += d;
+```cpp
+p += d;
+```
 
 If your language doesn't support operator overloading, `p.add(d);` is perfectly fine as well. So is `add(p,d);`.
 Both of them treat the X and Y coordinates equally, without exposing the dimensionality and details to the user.
@@ -123,27 +143,35 @@ Potato empires is a Haskell game that takes place on a regular 2D grid. I use an
 Typically, you'll see `Array` used with `(Int, Int)` index type in that scenario. That was what I begun with,
 and that was what I ultimately deemed much less useful than:
 
-    data Point = Point Int Int deriving (Show, Eq, Ord)
+```haskell
+data Point = Point Int Int deriving (Show, Eq, Ord)
+```
 
 The cool thing about Haskell is that Index types in it get their own special typeclass - `Ix`.
 
-    instance Ix Point where
-        range (Point minX minY, Point maxX maxY) = [Point x y | x <- [minX .. maxX], y <- [minY .. maxY]] 
-        inRange (Point minX minY, Point maxX maxY) (Point x y) = and [x >= minX, y >= minY, x <= maxX, y <= maxY] 
-       
-        -- implemented the same as default (a,b) Ix instance
-        index r@(Point l1 l2, Point u1 u2) p@(Point i1 i2) | inRange r p = index (l1,u1) i1 * rangeSize (l2,u2) + index (l2,u2) i2 
-                                                           | otherwise = error "Out of range"
+```haskell
+instance Ix Point where
+    range (Point minX minY, Point maxX maxY) = [Point x y | x <- [minX .. maxX], y <- [minY .. maxY]] 
+    inRange (Point minX minY, Point maxX maxY) (Point x y) = and [x >= minX, y >= minY, x <= maxX, y <= maxY] 
+   
+    -- implemented the same as default (a,b) Ix instance
+    index r@(Point l1 l2, Point u1 u2) p@(Point i1 i2) | inRange r p = index (l1,u1) i1 * rangeSize (l2,u2) + index (l2,u2) i2 
+                                                       | otherwise = error "Out of range"
+```
 
 My game map becomes simply
 
-    type GameMap = Array Point MapField
+```haskell
+type GameMap = Array Point MapField
+```
 
 Because the second type parameter to `Array` is anything that has an instance for `Ix`, I can use my own custom type, 
 and I never have to think about conversions, despite using my own index type.
 
-    getUnitAt :: GameMap -> Point -> Maybe Unit
-    getUnitAt gmap p = (gmap ! p) ^. unit
+```haskell
+getUnitAt :: GameMap -> Point -> Maybe Unit
+getUnitAt gmap p = (gmap ! p) ^. unit
+```
 
 I can place arbitrary restrictions on `Point` type, and I'm not constrained by anything that my data structure imposes on me.
 
@@ -156,71 +184,81 @@ This required establishing two coordinate systems; one that described chunks in 
 inside of the chunk. Actually, that made 3, because I wanted to be able to know the absolute coordinate of one voxel. That prompted code 
 reuse that used a funny technique called *tagging*:
 
-    static const int size = 24;
+```cpp
+static const int size = 24;
 
-    struct WorldCoordTag;
-    struct OuterChunkCoordTag;
-    struct InnerChunkCoordTag;
+struct WorldCoordTag;
+struct OuterChunkCoordTag;
+struct InnerChunkCoordTag;
 
-    template<typename Tag>
-    class Coord;
+template<typename Tag>
+class Coord;
 
-    typedef Coord<WorldCoordTag> WorldCoord;
-    typedef Coord<OuterChunkCoordTag> OuterChunkCoord;
-    typedef Coord<InnerChunkCoordTag> InnerChunkCoord;
+typedef Coord<WorldCoordTag> WorldCoord;
+typedef Coord<OuterChunkCoordTag> OuterChunkCoord;
+typedef Coord<InnerChunkCoordTag> InnerChunkCoord;
 
-    template<typename Tag>
-    class Coord {
-    public:
-        int x, y, z;
-        
-        Coord() 
-            : x(0), y(0), z(0) { }
-        Coord(int _x, int _y, int _z)
-            : x(_x), y(_y), z(_z) {
-        }
+template<typename Tag>
+class Coord {
+public:
+    int x, y, z;
+    
+    Coord() 
+        : x(0), y(0), z(0) { }
+    Coord(int _x, int _y, int _z)
+        : x(_x), y(_y), z(_z) {
+    }
 
-        void operator+= (Coord const& other) {
-            x += other.x;
-            y += other.y;
-            z += other.z;
-        }
-    };
+    void operator+= (Coord const& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+    }
+};
+```
 
 What followed were conversion routines that I'll skip implementations of (they're [available here](https://github.com/bananu7/MiniCraft/blob/master/src/Minefield.h#L40-L68) 
 and are worth another article dedicated just to the maths describing them; it took me quite some time to perfect
 their behaviour so that the world can grow in both positive and negative dimensions without issues).
 
-    static OuterChunkCoord convertToOuter (WorldCoord const& wc);
-    static InnerChunkCoord convertToInner (WorldCoord const& wc);
-    static WorldCoord convertToWorld (InnerChunkCoord const& ic, OuterChunkCoord const& oc);
+```cpp
+static OuterChunkCoord convertToOuter (WorldCoord const& wc);
+static InnerChunkCoord convertToInner (WorldCoord const& wc);
+static WorldCoord convertToWorld (InnerChunkCoord const& ic, OuterChunkCoord const& oc);
+```
 
 This is just the baseline, and the really interesting stuff is what you can build with them. Here's the `Chunk`:
 
-    class Chunk {
-        std::array<BlockType, size*size*size> data;
-    };
+```cpp
+class Chunk {
+    std::array<BlockType, size*size*size> data;
+};
+```
 
 And finally, the main data structure:
 
-    std::unordered_map<OuterChunkCoord, Chunk, CoordHash> data;
+```cpp
+std::unordered_map<OuterChunkCoord, Chunk, CoordHash> data;
+```
 
 I've decided to use the `unordered` variant because there's no obvious way to order voxels in 3D space. (Hell, there's 
 no obvious ways to order fields of a grid; both row-major and column-major formats are present and widely used.) This
 required a simple hashing routine:
 
-    class CoordHash {
-        template<typename Tag>
-        std::size_t operator()(Coord<Tag> const& p)
-        {
-            std::size_t seed = 0;
-            boost::hash_combine(seed, p.x);
-            boost::hash_combine(seed, p.y);
-            boost::hash_combine(seed, p.z);
+```cpp
+class CoordHash {
+    template<typename Tag>
+    std::size_t operator()(Coord<Tag> const& p)
+    {
+        std::size_t seed = 0;
+        boost::hash_combine(seed, p.x);
+        boost::hash_combine(seed, p.y);
+        boost::hash_combine(seed, p.z);
 
-            return seed;
-        }
-    };
+        return seed;
+    }
+};
+```
 
 `hash_combine` sadly isn't a part of C++ standard library. It's a pity, considering how useful this little helper is.
 

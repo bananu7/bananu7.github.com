@@ -10,5 +10,13 @@ collections:
     output: true
 safe: true
 lsi: false
+
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    line_numbers: false
+
 highlighter: rogue
-markdown: rdiscount
+

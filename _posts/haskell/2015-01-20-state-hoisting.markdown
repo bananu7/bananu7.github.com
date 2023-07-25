@@ -17,64 +17,64 @@ but I personally was struggling to find a good reference on it. So, without furt
 
 Assume you have a data type for state:
 
-{% highlight haskell %}
+```haskell
 import Control.Monad.State
 
 data MyData = MyData { str :: String } deriving (Show)
-{% endhighlight %}
+```
 
 and a context:
 
-{% highlight haskell %}
+```haskell
 type Context a = State MyData a
 
 myFunction :: Context Int
 myFunction = do
     a <- fmap length $ gets str
     return $ a + 1
-{% endhighlight %}        
+```
 
 Someone gives you a nice funky computation you want to run in your context:
 
-{% highlight haskell %}
+```haskell
 super :: Int -> State Int Int
-{% endhighlight %}    
+```
 
 You can add an `Int` to your context, turning it into:
 
-{% highlight haskell %}
+```haskell
 data MyData = MyData { str :: String, val :: Int } deriving (Show)
-{% endhighlight %}
+```
 
 What do you do?
 
 Well, actually it's not totally obvious for everyone. I'll give you a solution right now and then we'll
 talk about possible improvements to it. Here's a function you need:
 
-{% highlight haskell %}
+```haskell
 hoistVal :: State Int a -> State MyData a
-{% endhighlight %}
+```
 
 Make sure you understand the signature, and why we need it to look that way. We have a computation in some
 *narrow* state (`Int`) and we want to hoist it to a computation in a broader state (`MyData`).
 
-{% highlight haskell %}
+```haskell
 hoistVal fn = do
     s <- get
     let a = val s
     let (r, a') = runState fn a
     put $ s { val = a' }
     return r
-{% endhighlight %}
+```
 
 Now we can use it!
 
-{% highlight haskell %}
+```haskell
 myFunction = do
     a <- fmap length $ gets str -- get the length of the string
     b <- hoistVal $ super 5  
     return $ a + b
-{% endhighlight %}
+```
 
 ## What's going on?
 
@@ -99,28 +99,28 @@ Technically, yes, because that's the entire mechanism. I've noticed a few additi
 Consider an example, in which you might need `IO` to print from your state combinator for whatever bad reason, but the type incidentally matches
 the one needed by the function:
 
-{% highlight haskell %}
+```haskell
 type ContextIntIO a = StateT Int IO a
-{% endhighlight %}
+```
 
 Can you run `super` in this context? No, because there's a mismatch between `StateT Int Id a` (that's what `State Int a` boils down into if you use transformers) and `StateT Int IO a`. But since you don't care about
 that `Id` (you really only want any `State` that has `Int` inside), it should use `MonadState`.
 
 It's a really useful little thing that resides in `Control.Monad.State.Class`:
 
-{% highlight haskell %}
+```haskell
 class (Monad m) => MonadState s m | m -> s where
     -- | Return the state from the internals of the monad.
     get :: m s
     -- | Replace the state inside the monad.
     put :: s -> m ()
-{% endhighlight %}
+```
 
 What it does is basically defining an interface that every stateful context can implement.
 
-{% highlight haskell %}
+```haskell
 super :: MonadState Int m => Int -> m Int
-{% endhighlight %}
+```
 
 *Note:* you need `FlexibleContexts` for that, despite the fact that if you don't enable it and omit the signature, GHC will infer it correctly.
 
@@ -128,9 +128,9 @@ This means *this function will work for every context `m` that's `Int`*. Now we 
 
 If you look closer, you'll realize that `hoist` actually has the same problem!
 
-{% highlight haskell %}
+```haskell
 hoistVal :: MonadState MyData m => State Int a -> m a
-{% endhighlight %}
+```
 
 Cool, it can now hoist inside of both of regular and transformed variants.
 
@@ -144,30 +144,30 @@ Why not make the first `State` another type parameter? After all, we might expec
 That being said, you can hoist `StateT IO sa x` into `StateT IO sb x` (or whatever instead of IO);
 the only caveat is that you have to replace one line:
 
-{% highlight haskell %}
+```haskell
 let (r, a') = runState fn a
 -- to
 (r, a') <- runStateT fn a
-{% endhighlight %}
+```
 
 ### I'm tired of typing `Val` every time
 
 So am I. I hope you've heard about `Lens`. Before I introduce it, let's see what would happen if we tried to parametrize over `val`:
 
-{% highlight haskell %}
+```haskell
 b <- hoist val $ super 5
-{% endhighlight %}
+```
 
 `hoist` would need to look more or less like:
 
-{% highlight haskell %}
+```haskell
 hoist acc fn = do
     s <- get
     let a = acc s
     (r, a') = runState fn a
     put $ s { acc = a' }
     return r
-{% endhighlight %}
+```
 
 But sans the fact Haskell doesn't allow us to use `acc` with `put` (that's why there's no `puts`, which is kind of unfortunate), `acc`'s signature itself makes
 it "read-only". What we need is a way to extract the part of the state and then put it back together.
@@ -178,7 +178,7 @@ That's a Lens.
 
 In our case, even `Simple Lens` will do:
 
-{% highlight haskell %}
+```haskell
 hoist :: ( MonadState outerState m
          , Functor m ) => 
          Simple Lens outerState innerState -> 
@@ -189,7 +189,7 @@ hoist acc fn = do
     let (res, sp') = runState fn sp
     acc .= sp'
     return res
-{% endhighlight %}
+```
 
 And now our desired syntax works perfectly. We can freely nest records, and the lenses will take care of wrapping and unwrapping.
 
@@ -197,7 +197,7 @@ And now our desired syntax works perfectly. We can freely nest records, and the 
 
 ### Example 1
 
-{% highlight haskell %}
+```haskell
 {-# LANGUAGE FlexibleContexts #-}
 
 import Control.Monad.State
@@ -226,11 +226,11 @@ myFunction = do
     return $ a + b
 
 main = print $ runState myFunction (MyData "" 4)
-{% endhighlight %}
+```
 
 ### Example 2
 
-{% highlight haskell %}
+```haskell
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE RankNTypes #-}
 
@@ -263,4 +263,4 @@ myFunction = do
     return $ a + b
 
 main = print $ runState myFunction (MyData "" 4)
-{% endhighlight %}
+```

@@ -3,6 +3,7 @@ title: Exploring The Max7219
 date: 2020-09-07 00:00:00 Z
 categories:
 - embedded
+layout: post
 ---
 
 # Exploring the MAX7219
