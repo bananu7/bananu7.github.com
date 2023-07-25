@@ -248,9 +248,14 @@ header p {
   -ms-border-radius: 0px 2px 2px 0px;
   -khtml-border-radius: 0px 2px 2px 0px;
   border-radius: 0px 2px 2px 0px;
-  padding-right: 100px;
-  padding-left: 100px;
 }
+
+#banner .middle {
+  width: 850px; /* 790 + 30x2 padding */
+  padding: 0;
+  margin: auto;
+}
+
 #banner .button {
   border: 1px solid #dba500;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffe788), color-stop(100%, #ffce38));
@@ -270,7 +275,6 @@ header p {
   -o-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.4), 0px 1px 1px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.4), 0px 1px 1px rgba(0, 0, 0, 0.1);
   background-color: #FFE788;
-  margin-left: 5px;
   padding: 10px 12px;
   margin-top: 6px;
   line-height: 14px;
@@ -290,21 +294,8 @@ header p {
   background-color: #ffeca0;
 }
 
-/*
-#banner .fork {
-  position: fixed;
-  left: 50%;
-  margin-left: -325px;
-  padding: 10px 12px;
-  margin-top: 6px;
-  line-height: 14px;
-  font-size: 14px;
-  background-color: #FFE788;
-}
-*/
 #banner .downloads {
   float: right;
-  margin: 0 45px 0 0;
 }
 #banner .downloads span {
   float: left;
