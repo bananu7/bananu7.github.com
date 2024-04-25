@@ -1,6 +1,6 @@
 ---
 title: Nova, a homegrown kubernetes - part 1
-date: 2023-16-10 00:00:00 Z
+date: 2023-10-16
 layout: post
 categories:
 - kubernetes
